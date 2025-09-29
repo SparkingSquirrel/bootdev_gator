@@ -1,8 +1,8 @@
-import {readConfig} from "./config.js";
+import {readConfig, setUser} from "./config.js";
 
 function main() {
   //console.log("Hello, world!");
-  readConfig();
+  setUser("SparkingSquirrel");
 }
 
 main();
