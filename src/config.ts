@@ -2,47 +2,59 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 
-export class Config {
-    dbUrl: String;
-    currentUserName: String
+type Config = {
+  dbUrl: string;
+  currentUserName: string;
+};
 
-    constructor() {
-    this.dbUrl = "";
-    this.currentUserName = "";
+export function setUser(userName: string) {
+  const config = readConfig();
+  config.currentUserName = userName;
+  writeConfig(config);
+}
+
+function validateConfig(rawConfig: any) {
+  if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
+    throw new Error("db_url is required in config file");
   }
+  if (
+    !rawConfig.current_user_name ||
+    typeof rawConfig.current_user_name !== "string"
+  ) {
+    throw new Error("current_user_name is required in config file");
+  }
+
+  const config: Config = {
+    dbUrl: rawConfig.db_url,
+    currentUserName: rawConfig.current_user_name,
+  };
+
+  return config;
 }
 
-export function readConfig() : Config {
-    let configPath = getConfigFilePath();
-    let rawContents = JSON.parse(fs.readFileSync(configPath,{ encoding: 'utf-8' }))
-    let config = validateConfig(rawContents, false); //Name could be empty
-    console.log(config);
-    return config;
+export function readConfig() {
+  const fullPath = getConfigFilePath();
+
+  const data = fs.readFileSync(fullPath, "utf-8");
+  const rawConfig = JSON.parse(data);
+
+  return validateConfig(rawConfig);
 }
 
-export function setUser(name: String){
-    let config = readConfig()
-    config.currentUserName = name;
-    //write to file...
-    console.log("'writing..." + config.currentUserName + "  " + config.dbUrl);
+function getConfigFilePath() {
+  const configFileName = ".gatorconfig.json";
+  const homeDir = os.homedir();
+  return path.join(homeDir, configFileName);
 }
 
-function getConfigFilePath(): string {
-    let homedir = os.homedir();
-    return path.join(homedir, ".gatorconfig.json");
+function writeConfig(config: Config) {
+  const fullPath = getConfigFilePath();
 
-}
+  const rawConfig = {
+    db_url: config.dbUrl,
+    current_user_name: config.currentUserName,
+  };
 
-function validateConfig(rawConfig: any, checkName: boolean) : Config {
-
-    if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
-        throw new Error("db_url is required in config file");
-    }
-    if (checkName && (!rawConfig.current_user_name || typeof rawConfig.current_user_name !== "string")) {
-        throw new Error("current_user_name is required in config file");
-    }
-    return {
-        dbUrl: rawConfig.db_url,
-        currentUserName: rawConfig.current_user_name,
-    } as Config;
+  const data = JSON.stringify(rawConfig, null, 2);
+  fs.writeFileSync(fullPath, data, { encoding: "utf-8" });
 }
