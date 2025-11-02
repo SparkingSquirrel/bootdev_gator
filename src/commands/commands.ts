@@ -25,3 +25,16 @@ export async function runCommand(
 
   await handler(cmdName, ...args);
 }
+
+export async function resetCommand(
+  registry: CommandsRegistry,
+  cmdName: string,
+  ...args: string[]
+): Promise<void> {
+  const handler = registry[cmdName];
+  if (!handler) {
+    throw new Error(`Unknown command: ${cmdName}`);
+  }
+
+  await handler(cmdName, ...args);
+}
