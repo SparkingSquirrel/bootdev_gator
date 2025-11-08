@@ -38,3 +38,16 @@ export async function resetCommand(
 
   await handler(cmdName, ...args);
 }
+
+export async function fetchFeedCommand(
+  registry: CommandsRegistry,
+  cmdName: string,
+  ...args: string[]
+): Promise<void> {
+  const handler = registry[cmdName];
+  if (!handler) {
+    throw new Error(`Unknown command: ${cmdName}`);
+  }
+
+  await handler(cmdName, ...args);
+}

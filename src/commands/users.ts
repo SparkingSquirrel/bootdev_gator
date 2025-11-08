@@ -1,5 +1,5 @@
-import { setUser } from "../config";
-import { createUser, getUser, resetUser } from "../lib/db/queries/users";
+import { setUser, readConfig } from "../config";
+import { createUser, getUser, getUsers } from "../lib/db/queries/users";
 
 export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length !== 1) {
@@ -31,11 +31,15 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   console.log("User created successfully!");
 }
 
-export async function handlerReset(cmdName: string, ...args: string[]) {
-  if (args.length != 0) {
-    throw new Error(`Reset does not take arguments`)
-  }
+export async function handlerListUsers(_: string) {
+  const users = await getUsers();
+  const config = readConfig();
 
-  await resetUser().catch((error: unknown) => 
-                      {throw new Error(`Error restting User table: ${error}`)});
+  for (let user of users) {
+    if (user.name === config.currentUserName) {
+      console.log(`* ${user.name} (current)`);
+      continue;
+    }
+    console.log(`* ${user.name}`);
+  }
 }
