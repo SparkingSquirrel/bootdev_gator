@@ -1,3 +1,5 @@
+import { User } from "src/lib/db/schema";
+
 export type CommandHandler = (
   cmdName: string,
   ...args: string[]
@@ -26,28 +28,8 @@ export async function runCommand(
   await handler(cmdName, ...args);
 }
 
-export async function resetCommand(
-  registry: CommandsRegistry,
+export type UserCommandHandler = (
   cmdName: string,
+  user: User,
   ...args: string[]
-): Promise<void> {
-  const handler = registry[cmdName];
-  if (!handler) {
-    throw new Error(`Unknown command: ${cmdName}`);
-  }
-
-  await handler(cmdName, ...args);
-}
-
-export async function fetchFeedCommand(
-  registry: CommandsRegistry,
-  cmdName: string,
-  ...args: string[]
-): Promise<void> {
-  const handler = registry[cmdName];
-  if (!handler) {
-    throw new Error(`Unknown command: ${cmdName}`);
-  }
-
-  await handler(cmdName, ...args);
-}
+) => Promise<void> | void;
