@@ -1,5 +1,5 @@
 {
-  "id": "84817ba5-18d6-4e2b-a470-56ee90e82682",
+  "id": "f8e1b840-a480-440f-a1d5-13225e437ca1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -128,6 +128,12 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "last_fetch_at": {
+          "name": "last_fetch_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
