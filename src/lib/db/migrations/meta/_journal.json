@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1762035210260,
-      "tag": "0000_flawless_exodus",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1763237754147,
-      "tag": "0001_fancy_mother_askani",
+      "when": 1763599485041,
+      "tag": "0000_flimsy_catseye",
       "breakpoints": true
     }
   ]
